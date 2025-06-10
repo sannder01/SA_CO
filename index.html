@@ -10,6 +10,20 @@
       padding: 0;
       box-sizing: border-box;
     }
+    
+    html, body {
+    height: 100%;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
     body {
       font-family: Arial, sans-serif;
       line-height: 1.6;
@@ -180,46 +194,13 @@
     }
 
     /* Messenger Modal */
-    #messenger-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    #messenger-modal .box {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      text-align: center;
-    }
-    #messenger-modal img {
-      width: 60px;
-      height: 60px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    #messenger-modal img:hover {
-      transform: scale(1.1);
-    }
 
-    @media (max-width: 600px) {
-      .product-card img {
-        max-height: 140px;
-      }
-      #messenger-modal img {
-        width: 50px;
-        height: 50px;
-      }
-    }
   </style>
 </head>
+
+
 <body>
+<div class="wrapper">
   <header>
     <h1>SA_CO</h1>
     <div id="cart-btn">🛒 Корзина <span id="cart-count">0</span></div>
@@ -238,29 +219,34 @@
       <div class="cart-total">Итого: <span id="total-price">0</span> тг</div>
       <button id="checkout-btn">Оформить заказ</button>
     </div>
-  </div>
+  </div>    
 
   <!-- Мессенджеры -->
-  <div id="messenger-modal">
-    <div class="box">
-      <h3>Свяжитесь с нами для оформления заказа</h3>
-      <div style="margin-top: 1rem; display: flex; gap: 2rem; justify-content: center;">
-        <a href="https://t.me/Zech100" target="_blank">
-          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram" />
-        </a>
-        <a href="https://wa.me/+77752101725" target="_blank">
-          <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" />
-        </a>
-      </div>
-      <button onclick="closeMessengerModal()" style="margin-top: 1.5rem; padding: 0.5rem 1rem; background: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer;">Закрыть</button>
-    </div>
+  <div id="order-form-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;">
+  <div style="background:white; padding:2rem; border-radius:10px; max-width:400px; width:90%;">
+    <h3 style="margin-bottom:1rem;">Введите данные для доставки</h3>
+    <input id="fullName" type="text" placeholder="Имя Фамилия" style="width:100%; padding:0.5rem; margin-bottom:1rem;" required />
+    <input id="address" type="text" placeholder="Адрес доставки" style="width:100%; padding:0.5rem; margin-bottom:1rem;" required />
+    <input id="phone" type="tel" placeholder="Номер телефона" style="width:100%; padding:0.5rem; margin-bottom:1rem;" required />
+    <button onclick="submitOrder()" style="background:#27ae60; color:white; padding:0.75rem 1rem; border:none; border-radius:5px; width:100%;">Отправить заказ</button>
+    <button onclick="closeOrderForm()" style="margin-top:1rem; background:#e74c3c; color:white; padding:0.5rem 1rem; border:none; border-radius:5px; width:100%;">Отмена</button>
   </div>
+</div>
 
   <script>
+    
+    
+
+
+    ///ДОБАВЛЕНИЕ ТОВАРОВ
     const productsData = [
       { id: 1, title: "Кофта", description: "предзаказ", price: 11000, img: "5350407109461798326_121.jpg" },
       { id: 2, title: "Шорты", description: "предзаказ", price: 8000, img: "shorti.jpg" }
     ];
+
+
+
+
 
     const productsContainer = document.getElementById('products');
     const cartBtn = document.getElementById('cart-btn');
@@ -327,9 +313,7 @@
     cartBtn.addEventListener('click', () => cartModal.style.display = 'flex');
     closeCart.addEventListener('click', () => cartModal.style.display = 'none');
     checkoutBtn.addEventListener('click', () => messengerModal.style.display = 'flex');
-    function closeMessengerModal() {
-      messengerModal.style.display = 'none';
-    }
+    
 
     renderProducts();
   </script>
@@ -345,36 +329,69 @@
             }
         }
     });
+    
 
     const BOT_TOKEN = "7994638322:AAGBpKo3lseDJ60r8BibCJ0XUcmVVKq1J4M";
     const CHAT_ID = "-1002832881533"; // Пример: "-1001234567890"
 
-    function sendOrderToTelegram() {
-        if (!userName) return alert("Сначала введите имя при входе");
+    function submitOrder() {
+  const name = document.getElementById('fullName').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const phone = document.getElementById('phone').value.trim();
 
-        let message = `🛒 Новый заказ от: *${userName}*\n`;
-        cart.forEach(item => {
-            message += `• ${item.title} x ${item.qty} = ${item.price * item.qty} тг\n`;
-        });
-        message += `\nИтого: *${cart.reduce((sum, i) => sum + i.qty * i.price, 0)}* тг`;
+  if (!name || !address || !phone) {
+    alert("Пожалуйста, заполните все поля.");
+    return;
+  }
 
-        fetch(`https://api.telegram.org/bot${"7994638322:AAGBpKo3lseDJ60r8BibCJ0XUcmVVKq1J4M"}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: message,
-                parse_mode: "Markdown"
-            })
-        }).then(() => alert("Заказ отправлен!"));
-    }
+  let message = `🛒 Новый заказ:\n`;
+  message += `👤 Имя: *${name}*\n📍 Адрес: *${address}*\n📞 Телефон: *${phone}*\n\n`;
+  message += `📦 Товары:\n`;
 
-    checkoutBtn.addEventListener('click', () => {
-        sendOrderToTelegram();
-        cart = [];
-        updateCartUI();
-        cartModal.style.display = 'none';
-    });
+  cart.forEach(item => {
+    message += `• ${item.title} x ${item.qty} = ${item.price * item.qty} тг\n`;
+  });
+
+  message += `\n💰 Итого: *${cart.reduce((sum, i) => sum + i.qty * i.price, 0)}* тг`;
+
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: message,
+      parse_mode: "Markdown"
+    })
+  }).then(() => {
+    alert("Заказ отправлен!");
+    cart = [];
+    updateCartUI();
+    closeOrderForm();
+  });
+}
+
+function closeOrderForm() {
+  document.getElementById('order-form-modal').style.display = 'none';
+}
+
+  checkoutBtn.addEventListener('click', () => {
+  cartModal.style.display = 'none';
+  document.getElementById('order-form-modal').style.display = 'flex';
+});
 </script>
+</div>
+<!-- Связь с персоналом (в самом низу страницы) -->
+<footer style="background: rgba(255,255,255,0.9); padding: 2rem; text-align: center; margin-top: 3rem;">
+  <h3>Обратная связь</h3>
+  <div style="margin-top: 1rem; display: flex; gap: 2rem; justify-content: center; align-items: center;">
+    <a href="https://t.me/Zech100" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram" style="width: 60px; height: 60px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+    <a href="https://wa.me/+77752101725" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" style="width: 60px; height: 60px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+    </a>
+  </div>
+</footer>
+
 </body>
 </html>
