@@ -333,5 +333,48 @@
 
     renderProducts();
   </script>
+  <script>
+    let userName = localStorage.getItem("userName");
+
+    window.addEventListener('load', () => {
+        if (!userName) {
+            const name = prompt("Введите ваше имя для регистрации:");
+            if (name) {
+                localStorage.setItem("userName", name);
+                userName = name;
+            }
+        }
+    });
+
+    const BOT_TOKEN = "7994638322:AAGBpKo3lseDJ60r8BibCJ0XUcmVVKq1J4M";
+    const CHAT_ID = "-1002832881533"; // Пример: "-1001234567890"
+
+    function sendOrderToTelegram() {
+        if (!userName) return alert("Сначала введите имя при входе");
+
+        let message = `🛒 Новый заказ от: *${userName}*\n`;
+        cart.forEach(item => {
+            message += `• ${item.title} x ${item.qty} = ${item.price * item.qty} тг\n`;
+        });
+        message += `\nИтого: *${cart.reduce((sum, i) => sum + i.qty * i.price, 0)}* тг`;
+
+        fetch(`https://api.telegram.org/bot${"7994638322:AAGBpKo3lseDJ60r8BibCJ0XUcmVVKq1J4M"}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: "Markdown"
+            })
+        }).then(() => alert("Заказ отправлен!"));
+    }
+
+    checkoutBtn.addEventListener('click', () => {
+        sendOrderToTelegram();
+        cart = [];
+        updateCartUI();
+        cartModal.style.display = 'none';
+    });
+</script>
 </body>
 </html>
