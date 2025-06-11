@@ -333,7 +333,7 @@
     <input id="address" type="text" placeholder="Адрес доставки" style="width:100%; padding:0.5rem; margin-bottom:1rem;" required />
     <input id="phone" type="tel" placeholder="Номер телефона" style="width:100%; padding:0.5rem; margin-bottom:1rem;" required />
     <button onclick="submitOrder()" style="background:#27ae60; color:white; padding:0.75rem 1rem; border:none; border-radius:5px; width:100%;">Отправить заказ</button>
-    <button onclick="closeOrderForm()" style="margin-top:1rem; background:#e74c3c; color:white; padding:0.5rem 1rem; border:none; border-radius:5px; width:100%;">Отмена</button>
+    <button onclick="closeOrderForm()" style="margin-top:1rem; background:#d34738; color:white; padding:0.5rem 1rem; border:none; border-radius:5px; width:100%;">Отмена</button>
   </div>
 </div>
 
@@ -427,21 +427,11 @@
   renderProducts();
 </script>
 <script>
-    let userName = localStorage.getItem("userName");
 
-    window.addEventListener('load', () => {
-        if (!userName) {
-            const name = prompt("Введите ваше имя для регистрации:");
-            if (name) {
-                localStorage.setItem("userName", name);
-                userName = name;
-            }
-        }
-    });
     
 
-    const BOT_TOKEN = "7994638322:AAGBpKo3lseDJ60r8BibCJ0XUcmVVKq1J4M";
-    const CHAT_ID = "-4610285807"; // Пример: "-1001234567890"
+const BOT_TOKEN = "7994638322:AAGBpKo3lseDJ60r8BibCJ0XUcmVVKq1J4M";
+const CHAT_ID = "-4610285807"; // Пример: "-1001234567890"
 
 function isValidPhone(phone) {
   // Удалим пробелы и +, затем проверим, что остались только цифры, длиной от 10 до 15
