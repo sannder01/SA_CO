@@ -105,38 +105,38 @@
       font-size: 0.9rem;
     }
 
-    .product-card img {
-      width: 100%;
-      height: auto;
-      max-height: 150px;
-      object-fit: cover;
-    }
+.product-card img {
+  width: 100%;
+  height: 150px; /* одинаковая высота */
+  object-fit: cover;
+}
 
-    .product-info {
-      padding: 1rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
+.product-info {
+  padding: 0.6rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-    .product-info h3 {
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-    }
+.product-info h3 {
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+}
 
-    .product-info p {
-      margin-bottom: 1rem;
-      color: #555;
-      flex-grow: 1;
-    }
+.product-info p {
+  margin-bottom: 0.5rem;
+  color: #555;
+  flex-grow: 1;
+}
 
-    .product-info .price {
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
+.product-info .price {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
 
     .product-info button {
-      background: #27ae60;
+      background: #6e6e6ec3;
       color: #fff;
       border: none;
       padding: 0.5rem;
@@ -244,19 +244,34 @@
       font-size: 0.9rem;
     }
 
-    @media (min-width: 600px) {
-      footer img {
-        width: 60px;
-        height: 60px;
-      }
-    }
-
     @media (max-width: 600px) {
-      header {
-        padding: 0.5rem 1rem;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
+  .product-card img {
+    height: 100px; /* было 150px — уменьшили */
+  }
+
+  .product-info {
+    padding: 0.5rem;
+  }
+
+  .product-info h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .product-info p {
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+  }
+
+  .product-info .price {
+    margin-bottom: 0.3rem;
+  }
+
+  .product-info button {
+    padding: 0.4rem;
+    font-size: 0.85rem;
+  }
+}
 
       .product-grid {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -283,7 +298,7 @@
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
       }
-    }
+
   </style>
 </head>
 
@@ -329,8 +344,13 @@
 
     ///ДОБАВЛЕНИЕ ТОВАРОВ
     const productsData = [
-      { id: 1, title: "Кофта", description: "предзаказ", price: 11000, img: "5350407109461798326_121.jpg" },
-      { id: 2, title: "Шорты", description: "предзаказ", price: 8000, img: "shorti.jpg" }
+      { id: 1, title: "кофта", description: "предзаказ", price: 11000, img: "5350407109461798326_121.jpg" },
+      { id: 2, title: "шорты", description: "предзаказ", price: 5000, img: "shorti.jpg" },
+      { id: 3, title: "тишка vetements", description: "предзаказ", price: 6000, img: "tshirt_camera.jpg" },
+      { id: 4, title: "кофта comme des garcons", description: "предзаказ", price: 8000, img: "kofta_love.jpg" },
+      { id: 5, title: "ветровка", description: "предзаказ", price: 15000, img: "vetrivka_blue.jpg" },
+      { id: 6, title: "bigboy pants", description: "предзаказ", price: 12000, img: "pants_bigboy.jpg" }
+
     ];
 
 
@@ -404,9 +424,9 @@
 
     
 
-    renderProducts();
-  </script>
-  <script>
+  renderProducts();
+</script>
+<script>
     let userName = localStorage.getItem("userName");
 
     window.addEventListener('load', () => {
@@ -421,19 +441,31 @@
     
 
     const BOT_TOKEN = "7994638322:AAGBpKo3lseDJ60r8BibCJ0XUcmVVKq1J4M";
-    const CHAT_ID = "-1002832881533"; // Пример: "-1001234567890"
+    const CHAT_ID = "-4610285807"; // Пример: "-1001234567890"
 
-    function submitOrder() {
-    if (cart.length === 0) {
-        alert("Корзина пуста!");
-        return;
+function isValidPhone(phone) {
+  // Удалим пробелы и +, затем проверим, что остались только цифры, длиной от 10 до 15
+  const cleaned = phone.replace(/\s+/g, '').replace(/^\+/, '');
+  return /^\d{10,11}$/.test(cleaned);
 }
+
+function submitOrder() {
+  if (cart.length === 0) {
+    alert("Корзина пуста!");
+    return;
+  }
+
   const name = document.getElementById('fullName').value.trim();
   const address = document.getElementById('address').value.trim();
   const phone = document.getElementById('phone').value.trim();
 
   if (!name || !address || !phone) {
     alert("Пожалуйста, заполните все поля.");
+    return;
+  }
+
+  if (!isValidPhone(phone)) {
+    alert("Пожалуйста, введите корректный номер телефона");
     return;
   }
 
@@ -477,14 +509,14 @@ function closeOrderForm() {
 </script>
 </div>
 <!-- Связь с персоналом (в самом низу страницы) -->
-<footer style="background: rgba(255,255,255,0.9); padding: 2rem; text-align: center; margin-top: 3rem;">
+<footer style="background: rgba(255, 255, 255, 0.219); padding: 2rem; text-align: center; margin-top: 3rem;">
   <h3>Обратная связь</h3>
   <div style="margin-top: 1rem; display: flex; gap: 2rem; justify-content: center; align-items: center;">
     <a href="https://t.me/Zech100" target="_blank">
-      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram" style="width: 60px; height: 60px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      <img src="https://img.icons8.com/sf-regular-filled/144/telegram.png" alt="Telegram" style="width: 70px; height: 70px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
     </a>
     <a href="https://wa.me/+77752101725" target="_blank">
-      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" style="width: 60px; height: 60px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      <img src="https://img.icons8.com/ios-glyphs/144/whatsapp.png" alt="WhatsApp" style="width: 60px; height: 60px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
     </a>
   </div>
 </footer>
